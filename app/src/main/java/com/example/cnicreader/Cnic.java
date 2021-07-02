@@ -1,6 +1,7 @@
 package com.example.cnicreader;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -18,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Calendar;
 
-public class Cnic extends MainActivity {
+public class Cnic  {
 
     public String csvName = "CNIC-DATA-" + new Timestamp(System.currentTimeMillis()) + ".csv";
     private String csvDir = "CNIC_DATA/";
@@ -27,10 +28,23 @@ public class Cnic extends MainActivity {
     Calendar year = Calendar.getInstance();
     int curYear = year.get(Calendar.YEAR);
 
+    String gender = "Deciding...";
+    String name = "Deciding...";
+    String fatherName = "Deciding...";
+    String dateOfBirth = "Deciding...";
+    String dateOfIssue = "Deciding...";
+    String dateOfExpiry = "Deciding...";
+    String identityNumber = "Deciding..";
+    String countryOfStay = "Deciding...";
+    boolean containsDigit = true;
 
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
+    Activity mainActivity;
+
+    public Cnic(Activity activity){
+        this.mainActivity = activity;
+        csvPath = activity.getExternalFilesDir(csvDir).getAbsolutePath() + "/" + csvName;
+        detectedTextView = activity.findViewById(R.id.detected_text);
+        detectedTextView.setMovementMethod(new ScrollingMovementMethod());
 
     }
 
@@ -121,7 +135,7 @@ public class Cnic extends MainActivity {
                         && (!textBlock.getValue().equals(dateOfExpiry)))
                     try {
                         if (textBlock.getValue().split("\\.").length == 3) {
-                            if ((Integer.parseInt(textBlock.getValue().split("\\.")[2])) < 2021
+                            if ((Integer.parseInt(textBlock.getValue().split("\\.")[2])) < curYear
                                     && (Integer.parseInt(textBlock.getValue().split("\\.")[2])) > 2004)
                                 dateOfIssue = textBlock.getValue();
                         }
@@ -149,7 +163,7 @@ public class Cnic extends MainActivity {
                 && (!countryOfStay.equals("Deciding..."))) {
 
             try {
-                File directory = this.getExternalFilesDir(csvDir);
+                File directory = mainActivity.getExternalFilesDir(csvDir);
 
                 if (!directory.exists()) {
                     if (!directory.mkdirs()) {
@@ -165,7 +179,7 @@ public class Cnic extends MainActivity {
                             "\nDate Of Issue: " + dateOfIssue + "\nDate Of Expiry: " + dateOfExpiry + "\nCountry Of Stay: " + countryOfStay));
                     dataSaved = true;
                     Log.d("file-sohail", csvPath);
-                    runOnUiThread(() -> Toast.makeText(getBaseContext(), "Date stored in a CSV.", Toast.LENGTH_LONG).show());
+                    mainActivity.runOnUiThread(() -> Toast.makeText(mainActivity.getBaseContext(), "Date stored in a CSV.", Toast.LENGTH_LONG).show());
 
                 } catch (IOException e) {
                     Log.e("error", e.getMessage());
@@ -184,8 +198,7 @@ public class Cnic extends MainActivity {
             @Override
             public void run()
             {
-                stringBuilder = message +
-                        "\n";
+
                 detectedTextView.setText("Name: " + name + "\nFather Name: " + fatherName + "\nGender: " + gender +
                         "\nIdentity Number: " + identityNumber + "\nDate Of Birth: " + dateOfBirth +
                         "\nDate Of Issue: " + dateOfIssue + "\nDate Of Expiry: " + dateOfExpiry + "\nCountry Of Stay: " + countryOfStay);
@@ -193,8 +206,4 @@ public class Cnic extends MainActivity {
         });
     }
 
-    public void onStart()
-    {
-        super.onStart();
-    }
 }

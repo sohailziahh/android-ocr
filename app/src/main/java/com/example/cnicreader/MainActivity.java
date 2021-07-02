@@ -67,7 +67,7 @@ public class MainActivity extends CameraActivity {
 
     protected BasicExerciseViewBinding viewBinding;
 
-    private TextView detectedTextView;
+    //private TextView detectedTextView;
 
     public void initViews()
     {
@@ -88,31 +88,18 @@ public class MainActivity extends CameraActivity {
     TextView textView;
     Cnic thisCnic;
 
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        detectedTextView = findViewById(R.id.detected_text);
-        detectedTextView.setMovementMethod(new ScrollingMovementMethod());
-        csvPath = this.getExternalFilesDir(csvDir).getAbsolutePath() + "/" + csvName;
-        thisCnic = new Cnic();
+
+        thisCnic = new Cnic(this);
     }
 
-    public String csvName = "CNIC-DATA-" + new Timestamp(System.currentTimeMillis()) + ".csv";
-    private String csvDir = "CNIC_DATA/";
-    private String csvPath;
 
-    String gender = "Deciding...";
-    String name = "Deciding...";
-    String fatherName = "Deciding...";
-    String dateOfBirth = "Deciding...";
-    String dateOfIssue = "Deciding...";
-    String dateOfExpiry = "Deciding...";
-    String identityNumber = "Deciding..";
-    String countryOfStay = "Deciding...";
-    boolean containsDigit = true;
 
     private void convertToTextBlocks(Bitmap bitmap)
     {
@@ -146,6 +133,7 @@ public class MainActivity extends CameraActivity {
                 return diffOfLefts;
             });
 
+            // todo this shouldnt be called here, as each function should do one thing only.
             thisCnic.imageCNIC(textBlocks);
 //            imageCNIC(textBlocks);
             StringBuilder detectedText = new StringBuilder();
@@ -155,6 +143,7 @@ public class MainActivity extends CameraActivity {
                     detectedText.append("\n");
                 }
             }
+            // todo same thing as above.
             thisCnic.setText(detectedText);
             thisCnic.saveData();
         } finally
@@ -312,6 +301,9 @@ public class MainActivity extends CameraActivity {
         convertToTextBlocks(bitmap);
     }
 
+
+    String stringBuilder;
+
     private void setText(String message) {
 
         textView.post(new Runnable() {
@@ -325,23 +317,6 @@ public class MainActivity extends CameraActivity {
     }
 
 
-    String stringBuilder;
-
-    private void setText(StringBuilder message) {
-
-        detectedTextView.post(new Runnable() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void run()
-            {
-                stringBuilder = message +
-                        "\n";
-                detectedTextView.setText("Name: " + name + "\nFather Name: " + fatherName + "\nGender: " + gender +
-                        "\nIdentity Number: " + identityNumber + "\nDate Of Birth: " + dateOfBirth +
-                        "\nDate Of Issue: " + dateOfIssue + "\nDate Of Expiry: " + dateOfExpiry + "\nCountry Of Stay: " + countryOfStay);
-            }
-        });
-    }
 
     public void onStart()
     {
