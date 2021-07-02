@@ -70,7 +70,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 abstract public class CameraActivity extends AppCompatActivity implements ImageReader.OnImageAvailableListener {
 
-
     /**
      * CAMERA
      **/
@@ -356,7 +355,7 @@ abstract public class CameraActivity extends AppCompatActivity implements ImageR
 
        // Mat imageMat = new Mat();
        // org.opencv.android.Utils.bitmapToMat(bitmap.copy(Bitmap.Config.ARGB_8888,true), imageMat);
-        runOCR(bitmap);
+        processImage(bitmap);
 
         image.close();
         processing = false;
@@ -375,7 +374,7 @@ abstract public class CameraActivity extends AppCompatActivity implements ImageR
         return Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
 }
 
-    public abstract void runOCR(Bitmap bitmap);
+    public abstract void processImage(Bitmap bitmap);
 
 
     private void hideNavigationBar() {
