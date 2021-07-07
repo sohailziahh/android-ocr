@@ -86,7 +86,7 @@ public class MainActivity extends CameraActivity {
     }
 
     TextView textView;
-    Cnic thisCnic;
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -96,12 +96,12 @@ public class MainActivity extends CameraActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        thisCnic = new Cnic(this);
+       
     }
 
 
 
-    private void convertToTextBlocks(Bitmap bitmap)
+    private void textRecognition(Bitmap bitmap)
     {
 
         TextRecognizer textRecognizer = new TextRecognizer.Builder(this).build();
@@ -112,193 +112,24 @@ public class MainActivity extends CameraActivity {
                         setMessage("Text recognizer could not be set up on your device").show();
                 return;
             }
+
             Log.d("ocr-sohail", "-------");
+            DocumentExtractor extraction = new BaseDocumentExtractor();
+            extraction.convertToTextBlocks(bitmap,textRecognizer);
 
-            Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-            SparseArray<TextBlock> origTextBlocks = textRecognizer.detect(frame);
-            List<TextBlock> textBlocks = new ArrayList<>();
-            for (int i = 0; i < origTextBlocks.size(); i++) {
-                TextBlock textBlock = origTextBlocks.valueAt(i);
-                textBlocks.add(textBlock);
-                Log.d("ocr-sohail", "" + textBlock.getValue() + " - " + textBlock.getValue().length());
-            }
 
-            textBlocks.sort((o1, o2) -> {
-                int diffOfTops = o1.getBoundingBox().top - o2.getBoundingBox().top;
-                int diffOfLefts = o1.getBoundingBox().left - o2.getBoundingBox().left;
-                if (diffOfTops != 0)
-                {
-                    return diffOfTops;
-                }
-                return diffOfLefts;
-            });
-
-            // todo this shouldnt be called here, as each function should do one thing only.
-            thisCnic.imageCNIC(textBlocks);
-//            imageCNIC(textBlocks);
-            StringBuilder detectedText = new StringBuilder();
-            for (TextBlock textBlock : textBlocks) {
-                if (textBlock != null && textBlock.getValue() != null) {
-                    detectedText.append(textBlock.getValue());
-                    detectedText.append("\n");
-                }
-            }
-            // todo same thing as above.
-            thisCnic.setText(detectedText);
-            thisCnic.saveData();
         } finally
         {
             textRecognizer.release();
         }
     }
-//        private void imageCNIC (List<TextBlock> textBlocks) {
-//
-//            for (int i = 0; i < textBlocks.size(); i++) {
-//                TextBlock textBlock = textBlocks.get(i);
-//                String s = textBlock.getValue();
-//                s.trim();
-//                if (name.equals("Deciding...") && (s.equals("Name"))) {
-//                    String tempTextBlockValue = textBlocks.get(i + 1).getValue();
-//                    char[] characters = tempTextBlockValue.toCharArray();
-//                    containsDigit = false;
-//                    for (char c : characters) {
-//                        if (Character.isDigit(c))
-//                            containsDigit = true;
-//                    }
-//                    if (!containsDigit)
-//                        name = tempTextBlockValue;
-//                } else if (fatherName.equals("Deciding...") && (s.equals("Father Name"))) {
-//                    String tempTextBlockValue = textBlocks.get(i + 1).getValue();
-//                    char[] characters = tempTextBlockValue.toCharArray();
-//                    containsDigit = false;
-//                    for (char c : characters) {
-//                        if (Character.isDigit(c))
-//                            containsDigit = true;
-//                    }
-//                    if (!containsDigit)
-//                        fatherName = tempTextBlockValue;
-//                } else if (gender.equals("Deciding...")
-//                        && (textBlock.getValue().contains("M"))
-//                        && (textBlock.getValue().indexOf("M") == 0)
-//                        && (textBlock.getValue().length() == 1)) {
-//                    gender = "Male";
-//                } else if (gender.equals("Deciding...")
-//                        && (textBlock.getValue().contains("F"))
-//                        && (textBlock.getValue().indexOf("F") == 0)
-//                        && textBlock.getValue().length() == 1) {
-//                    gender = "Female";
-//                } else if (((identityNumber.equals("Deciding..."))
-//                        || dateOfBirth.equals("Deciding..."))
-//                        && (textBlock.getValue().contains("-"))
-//                        && (textBlock.getValue().contains("."))) {
-//
-//                    String string = textBlock.getValue();
-//                    //identityNumberCheck
-//                    if ((string.split(" ")[0].length() == 15) && (string.split(" ")[0].contains("-")))
-//                        identityNumber = string.split(" ")[0];
-//                    //dateOfBirthCheck
-//                    if ((string.split(" ")[1].length() == 10) && (string.split(" ")[1].contains("."))) {
-//                        if (textBlock.getValue().split("\\.").length == 3) {
-//                            // age cannot be less than 18
-//                            if ((Integer.parseInt(string.split(" ")[1].split("\\.")[2])) < 2004)
-//                                dateOfBirth = string.split(" ")[1];
-//                        }
-//                    }
-//                } else if (dateOfBirth.equals("Deciding...")
-//                        && (textBlock.getValue().length() == 10)
-//                        && (textBlock.getValue().contains("."))) {
-//                    if (textBlock.getValue().split("\\.").length == 3) {
-//                        // age cannot be less than 18
-//                        if ((Integer.parseInt(textBlock.getValue().split("\\.")[2])) < 2004)
-//                            dateOfBirth = textBlock.getValue();
-//                    }
-//                } else if ((identityNumber.equals("Deciding..."))
-//                        && (textBlock.getValue().contains("-"))
-//                        && (textBlock.getValue().length() == 15)) {
-//                    String string = textBlock.getValue();
-//                    if (string.substring(5).equals("-") && string.substring(13).equals("-"))
-//                        identityNumber = string;
-//                } else if ((dateOfExpiry.equals("Deciding...")) && !(dateOfIssue.equals("Deciding..."))) {
-//                    if (textBlock.getValue().contains(".")
-//                            && (textBlock.getValue().length() == 10)
-//                            && (!textBlock.getValue().equals(dateOfIssue)))
-//                        try {
-//                            if (textBlock.getValue().split("\\.").length == 3)
-//                            {
-//                                //because NADRA started issuing smartcards from 2012
-//                                if ((Integer.parseInt(textBlock.getValue().split("\\.")[2])) > 2022)
-//                                    dateOfExpiry = textBlock.getValue();
-//                            }
-//                        } catch (NumberFormatException e) {
-//                            e.printStackTrace();
-//                        }
-//                } else if ((dateOfIssue.equals("Deciding..."))) {
-//                    if (textBlock.getValue().contains(".")
-//                            && (textBlock.getValue().length() == 10)
-//                            && (!textBlock.getValue().equals(dateOfExpiry)))
-//                        try {
-//                            if (textBlock.getValue().split("\\.").length == 3) {
-//                                if ((Integer.parseInt(textBlock.getValue().split("\\.")[2])) < 2021
-//                                        && (Integer.parseInt(textBlock.getValue().split("\\.")[2])) > 2004)
-//                                    dateOfIssue = textBlock.getValue();
-//                            }
-//                        } catch (NumberFormatException e) {
-//                            e.printStackTrace();
-//                        }
-//                }
-//            }
-//            if (!name.equals("Deciding..."))
-//                countryOfStay = "Pakistan";
-//
-//    }
 
-    boolean dataSaved = false;
-
-    //    private void saveData() {
-//
-//        if (!identityNumber.equals("Deciding...")
-//                && (!dateOfBirth.equals("Deciding..."))
-//                && (!dateOfIssue.equals("Deciding..."))
-//                && (!dateOfExpiry.equals("Deciding..."))
-//                && (!gender.equals("Deciding..."))
-//                && (!fatherName.equals("Deciding..."))
-//                && (!name.equals("Deciding..."))
-//                && (!countryOfStay.equals("Deciding..."))) {
-//
-//            try {
-//                File directory = this.getExternalFilesDir(csvDir);
-//
-//                if (!directory.exists()) {
-//                    if (!directory.mkdirs()) {
-//                        return;
-//                    }
-//                }
-//                // If you require it to make the entire directory path including parents,
-//                // use directory.mkdirs(); here instead.
-//
-//                try {
-//                    Files.write(Paths.get(csvPath), Collections.singleton("Name: " + name + "\nFather Name: " + fatherName + "\nGender: " + gender +
-//                            "\nIdentity Number: " + identityNumber + "\nDate Of Birth: " + dateOfBirth +
-//                            "\nDate Of Issue: " + dateOfIssue + "\nDate Of Expiry: " + dateOfExpiry + "\nCountry Of Stay: " + countryOfStay));
-//                    dataSaved = true;
-//                    Log.d("file-sohail", csvPath);
-//                    runOnUiThread(() -> Toast.makeText(getBaseContext(), "Date stored in a CSV.", Toast.LENGTH_LONG).show());
-//
-//                } catch (IOException e) {
-//                    Log.e("error", e.getMessage());
-//                }
-//            } catch (Exception e) {
-//                Log.e("error", e.getMessage());
-//            }
-//
-//        }
-//    }
     Bitmap currentBitmap;
 
     @Override
     public void processImage(Bitmap bitmap) {
         currentBitmap = bitmap;
-        convertToTextBlocks(bitmap);
+        textRecognition(bitmap);
     }
 
 

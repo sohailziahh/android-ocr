@@ -2,7 +2,6 @@ package com.example.cnicreader;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
@@ -15,11 +14,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Calendar;
 
-public class Cnic  {
+public class CnicExtractor extends BaseDocumentExtractor {
 
     public String csvName = "CNIC-DATA-" + new Timestamp(System.currentTimeMillis()) + ".csv";
     private String csvDir = "CNIC_DATA/";
@@ -40,15 +39,16 @@ public class Cnic  {
 
     Activity mainActivity;
 
-    public Cnic(Activity activity){
-        this.mainActivity = activity;
-        csvPath = activity.getExternalFilesDir(csvDir).getAbsolutePath() + "/" + csvName;
-        detectedTextView = activity.findViewById(R.id.detected_text);
-        detectedTextView.setMovementMethod(new ScrollingMovementMethod());
+//    public Cnic(Activity activity){
+//        this.mainActivity = activity;
+//        csvPath = activity.getExternalFilesDir(csvDir).getAbsolutePath() + "/" + csvName;
+//        detectedTextView = activity.findViewById(R.id.detected_text);
+//        detectedTextView.setMovementMethod(new ScrollingMovementMethod());
+//
+//
+//    }
 
-    }
-
-    public void imageCNIC (List<TextBlock> textBlocks) {
+    public void imageToText (List<TextBlock> textBlocks) {
 
         for (int i = 0; i < textBlocks.size(); i++) {
             TextBlock textBlock = textBlocks.get(i);
@@ -205,5 +205,6 @@ public class Cnic  {
             }
         });
     }
+
 
 }
