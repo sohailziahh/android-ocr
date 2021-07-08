@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -67,6 +68,8 @@ public class MainActivity extends CameraActivity {
 
     protected BasicExerciseViewBinding viewBinding;
 
+    static Activity mainActivity;
+
     //private TextView detectedTextView;
 
     public void initViews()
@@ -96,7 +99,7 @@ public class MainActivity extends CameraActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       
+
     }
 
 
@@ -114,8 +117,8 @@ public class MainActivity extends CameraActivity {
             }
 
             Log.d("ocr-sohail", "-------");
-            DocumentExtractor extraction = new BaseDocumentExtractor();
-            extraction.convertToTextBlocks(bitmap,textRecognizer);
+            DocumentExtractor extraction = new BaseDocumentExtractor(mainActivity);
+            extraction.process(bitmap,textRecognizer);
 
 
         } finally

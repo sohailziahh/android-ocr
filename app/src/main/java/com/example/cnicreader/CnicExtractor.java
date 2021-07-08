@@ -37,9 +37,13 @@ public class CnicExtractor extends BaseDocumentExtractor {
     String countryOfStay = "Deciding...";
     boolean containsDigit = true;
 
-    Activity mainActivity;
+    public CnicExtractor(Activity activity) {
+        super(activity);
+    }
 
-//    public Cnic(Activity activity){
+
+
+    //    public Cnic(Activity activity){
 //        this.mainActivity = activity;
 //        csvPath = activity.getExternalFilesDir(csvDir).getAbsolutePath() + "/" + csvName;
 //        detectedTextView = activity.findViewById(R.id.detected_text);
@@ -47,7 +51,7 @@ public class CnicExtractor extends BaseDocumentExtractor {
 //
 //
 //    }
-
+    @Override
     public void imageToText (List<TextBlock> textBlocks) {
 
         for (int i = 0; i < textBlocks.size(); i++) {
@@ -148,9 +152,11 @@ public class CnicExtractor extends BaseDocumentExtractor {
             countryOfStay = "Pakistan";
 
     }
+  boolean dataSaved;
 
-    boolean dataSaved = false;
 
+
+    @Override
     public void saveData() {
 
         if (!identityNumber.equals("Deciding...")
@@ -191,6 +197,7 @@ public class CnicExtractor extends BaseDocumentExtractor {
         }
     }
 
+    @Override
     public void setText(StringBuilder message) {
 
         detectedTextView.post(new Runnable() {
@@ -205,6 +212,10 @@ public class CnicExtractor extends BaseDocumentExtractor {
             }
         });
     }
+
+
+
+
 
 
 }
