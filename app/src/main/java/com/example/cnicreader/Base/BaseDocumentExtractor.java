@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.example.cnicreader.Extraction.DocumentExtractorInterface;
 import com.example.cnicreader.Instances.CnicExtractor;
 import com.example.cnicreader.Extraction.DocumentExtractor;
 import com.google.android.gms.vision.Frame;
