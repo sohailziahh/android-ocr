@@ -16,5 +16,9 @@ abstract public class DocumentExtractor {
 
     abstract public void imageToText(List<TextBlock> textBlocks);
 
+    abstract public void setText(StringBuilder detectedText);
+
+    abstract public void saveData();
+
 
 }

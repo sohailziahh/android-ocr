@@ -5,9 +5,13 @@ import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.text.method.ScrollingMovementMethod;
+
 
 import com.example.cnicreader.Base.BaseDocumentExtractor;
+import com.example.cnicreader.MainActivity;
 import com.google.android.gms.vision.text.TextBlock;
+import com.example.cnicreader.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,21 +41,16 @@ public class CnicExtractor extends BaseDocumentExtractor {
     String countryOfStay = "Deciding...";
     boolean containsDigit = true;
 
-    BaseDocumentExtractor doc;
+    Activity mainActivity;
 
-    public CnicExtractor(Activity activity) {
-        super(activity);
+        public CnicExtractor(Activity activity){
+            this.mainActivity = activity;
+            csvPath = activity.getExternalFilesDir(csvDir).getAbsolutePath() + "/" + csvName;
+            detectedTextView = activity.findViewById(R.id.detected_text);
+            detectedTextView.setMovementMethod(new ScrollingMovementMethod());
+//
+//
     }
-
-
-    //    public Cnic(Activity activity){
-//        this.mainActivity = activity;
-//        csvPath = activity.getExternalFilesDir(csvDir).getAbsolutePath() + "/" + csvName;
-//        detectedTextView = activity.findViewById(R.id.detected_text);
-//        detectedTextView.setMovementMethod(new ScrollingMovementMethod());
-//
-//
-//    }
     @Override
     public void imageToText (List<TextBlock> textBlocks) {
 
@@ -152,6 +151,7 @@ public class CnicExtractor extends BaseDocumentExtractor {
         if (!name.equals("Deciding..."))
             countryOfStay = "Pakistan";
 
+
     }
   boolean dataSaved;
 
@@ -201,7 +201,7 @@ public class CnicExtractor extends BaseDocumentExtractor {
     @Override
     public void setText(StringBuilder message) {
 
-        detectedTextView.post(new Runnable() {
+       detectedTextView.post(new Runnable() {
             @SuppressLint("SetTextI18n")
             @Override
             public void run()

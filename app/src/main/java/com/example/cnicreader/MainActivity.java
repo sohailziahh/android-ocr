@@ -79,9 +79,9 @@ public class MainActivity extends CameraActivity {
             }
 
             Log.d("ocr-sohail", "-------");
-            DocumentExtractor extraction = new BaseDocumentExtractor(this);
+            DocumentExtractor extraction = new BaseDocumentExtractor();
             List<TextBlock> textBlocks = extraction.process(bitmap,textRecognizer);
-            CnicExtractor cnic = new CnicExtractor(this);
+            BaseDocumentExtractor cnic = new CnicExtractor(this);
             extraction.extract(cnic,textBlocks);
             StringBuilder detectedText = new StringBuilder();
             for (TextBlock textBlock : textBlocks) {

@@ -20,12 +20,8 @@ public class BaseDocumentExtractor extends DocumentExtractor {
     public static Activity mainActivity;
 
 
-    public BaseDocumentExtractor(Activity activity){
-        this.mainActivity = activity;
 
-    }
 
-    BaseDocumentExtractor cnic = new CnicExtractor(mainActivity);
 
     public List<TextBlock> process(Bitmap bitmap, TextRecognizer textRecognizer) {
         Frame frame = new Frame.Builder().setBitmap(bitmap).build();
@@ -56,18 +52,18 @@ public class BaseDocumentExtractor extends DocumentExtractor {
 //            }
 //        }
 //        // todo same thing as above.
-//        cnic.setText(detectedText);
+  //      cnic.setText(detectedText);
 //        cnic.saveData();
         return textBlocks;
     }
 
 
     public void setText(StringBuilder detectedText){
-        cnic.setText(detectedText);
+
     }
 
     public void saveData(){
-        cnic.saveData();
+
     }
 
     @Override
