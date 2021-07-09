@@ -1,12 +1,12 @@
-package com.example.cnicreader;
+package com.example.cnicreader.Instances;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cnicreader.Base.BaseDocumentExtractor;
 import com.google.android.gms.vision.text.TextBlock;
 
 import java.io.File;
@@ -37,10 +37,11 @@ public class CnicExtractor extends BaseDocumentExtractor {
     String countryOfStay = "Deciding...";
     boolean containsDigit = true;
 
+    BaseDocumentExtractor doc;
+
     public CnicExtractor(Activity activity) {
         super(activity);
     }
-
 
 
     //    public Cnic(Activity activity){

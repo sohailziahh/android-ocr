@@ -38,7 +38,7 @@ android {
                 srcDirs 'src\\main\\jni', 'src\\main\\jniLibs'
             }
             java {
-                srcDirs 'src\\main\\java', 'src\\main\\java\\com.example.cnicreader', 'src\\main\\java\\com.example.cnicreader\\Extraction', 'src\\main\\java\\2'
+                srcDirs 'src\\main\\java', 'src\\main\\java\\com.example.cnicreader', 'src\\main\\java\\com.example.cnicreader\\Extraction', 'src\\main\\java\\2', 'src\\main\\java\\Extraction'
             }
         }
     }
