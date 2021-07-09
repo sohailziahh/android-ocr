@@ -1,10 +1,8 @@
-package com.example.cnicreader.Extraction;
+package com.example.cnicreader.Extraction.DocumentExtraction;
 
-import android.graphics.Bitmap;
-
-import com.example.cnicreader.Base.BaseDocumentExtractor;
+import com.example.cnicreader.Extraction.DocumentExtraction.Base.BaseDocumentExtractor;
 import com.google.android.gms.vision.text.TextBlock;
-import com.google.android.gms.vision.text.TextRecognizer;
+
 import java.util.List;
 
 

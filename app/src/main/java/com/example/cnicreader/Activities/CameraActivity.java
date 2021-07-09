@@ -1,4 +1,4 @@
-package com.example.cnicreader;
+package com.example.cnicreader.Activities;
 
 
 import android.Manifest;
@@ -26,6 +26,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.cnicreader.R;
 import com.example.cnicreader.utils.ExtendedBitmap;
 import com.example.cnicreader.utils.ImageUtils;
 import com.karumi.dexter.Dexter;

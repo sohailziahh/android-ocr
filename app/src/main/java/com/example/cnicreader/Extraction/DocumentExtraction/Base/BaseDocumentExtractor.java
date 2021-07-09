@@ -1,13 +1,11 @@
-package com.example.cnicreader.Base;
+package com.example.cnicreader.Extraction.DocumentExtraction.Base;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.SparseArray;
 
-import com.example.cnicreader.Extraction.DocumentExtractorInterface;
-import com.example.cnicreader.Instances.CnicExtractor;
-import com.example.cnicreader.Extraction.DocumentExtractor;
+import com.example.cnicreader.Extraction.DocumentExtraction.DocumentExtractor;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
@@ -17,12 +15,6 @@ import java.util.List;
 
 
 public class BaseDocumentExtractor extends DocumentExtractor {
-
-    public static Activity mainActivity;
-
-
-
-
 
     public List<TextBlock> process(Bitmap bitmap, TextRecognizer textRecognizer) {
         Frame frame = new Frame.Builder().setBitmap(bitmap).build();
@@ -43,32 +35,26 @@ public class BaseDocumentExtractor extends DocumentExtractor {
             return diffOfLefts;
         });
 
-        // todo this shouldnt be called here, as each function should do one thing only.
-//        extract(cnic,textBlocks);
-//        StringBuilder detectedText = new StringBuilder();
-//        for (TextBlock textBlock : textBlocks) {
-//            if (textBlock != null && textBlock.getValue() != null) {
-//                detectedText.append(textBlock.getValue());
-//                detectedText.append("\n");
-//            }
-//        }
-//        // todo same thing as above.
-  //      cnic.setText(detectedText);
-//        cnic.saveData();
         return textBlocks;
     }
 
 
+    @Override
     public void setText(StringBuilder detectedText){
 
     }
 
+    @Override
     public void saveData(){
 
     }
 
     @Override
     public void imageToText(List<TextBlock> textBlocks){
+
+    }
+
+    public void initializeViews(){
 
     }
 

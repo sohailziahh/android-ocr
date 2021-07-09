@@ -1,4 +1,4 @@
-package com.example.cnicreader.Instances;
+package com.example.cnicreader.Extraction.DocumentExtraction.Instances;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,8 +8,7 @@ import android.widget.Toast;
 import android.text.method.ScrollingMovementMethod;
 
 
-import com.example.cnicreader.Base.BaseDocumentExtractor;
-import com.example.cnicreader.MainActivity;
+import com.example.cnicreader.Extraction.DocumentExtraction.Base.BaseDocumentExtractor;
 import com.google.android.gms.vision.text.TextBlock;
 import com.example.cnicreader.R;
 
@@ -46,11 +45,16 @@ public class CnicExtractor extends BaseDocumentExtractor {
         public CnicExtractor(Activity activity){
             this.mainActivity = activity;
             csvPath = activity.getExternalFilesDir(csvDir).getAbsolutePath() + "/" + csvName;
-            detectedTextView = activity.findViewById(R.id.detected_text);
-            detectedTextView.setMovementMethod(new ScrollingMovementMethod());
+
 //
 //
     }
+
+    public void initializeViews(){
+        detectedTextView = mainActivity.findViewById(R.id.detected_text);
+        detectedTextView.setMovementMethod(new ScrollingMovementMethod());
+    }
+
     @Override
     public void imageToText (List<TextBlock> textBlocks) {
 

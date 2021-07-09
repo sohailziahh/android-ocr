@@ -55,9 +55,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.example.cnicreader.CameraActivity;
+import com.example.cnicreader.Activities.CameraActivity;
 import com.example.cnicreader.R;
-import com.example.cnicreader.logger.Logger;
 import com.example.cnicreader.logger.Logger;
 
 import com.example.cnicreader.views.AutoFitTextureView;

@@ -1,4 +1,4 @@
-package com.example.cnicreader;
+package com.example.cnicreader.Activities;
 
 import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
@@ -12,9 +12,11 @@ import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.cnicreader.Base.BaseDocumentExtractor;
-import com.example.cnicreader.Extraction.DocumentExtractor;
-import com.example.cnicreader.Instances.CnicExtractor;
+import com.example.cnicreader.Activities.CameraActivity;
+import com.example.cnicreader.Extraction.DocumentExtraction.Base.BaseDocumentExtractor;
+import com.example.cnicreader.Extraction.DocumentExtraction.DocumentExtractor;
+import com.example.cnicreader.Extraction.DocumentExtraction.Instances.CnicExtractor;
+import com.example.cnicreader.R;
 import com.example.cnicreader.databinding.BasicExerciseViewBinding;
 
 import com.google.android.gms.vision.text.TextBlock;
@@ -40,6 +42,7 @@ public class MainActivity extends CameraActivity {
         parentContainer = findViewById(R.id.containerParent);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         parentContainer.addView(viewBinding.getRoot(), layoutParams);
+
     }
 
 
@@ -51,6 +54,9 @@ public class MainActivity extends CameraActivity {
     }
 
     TextView textView;
+    DocumentExtractor extraction;
+    BaseDocumentExtractor cnic;
+    
 
 
 
@@ -60,6 +66,9 @@ public class MainActivity extends CameraActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        extraction = new BaseDocumentExtractor();
+        cnic = new CnicExtractor(this);
+        cnic.initializeViews();
 
 
     }
@@ -79,9 +88,8 @@ public class MainActivity extends CameraActivity {
             }
 
             Log.d("ocr-sohail", "-------");
-            DocumentExtractor extraction = new BaseDocumentExtractor();
+            
             List<TextBlock> textBlocks = extraction.process(bitmap,textRecognizer);
-            BaseDocumentExtractor cnic = new CnicExtractor(this);
             extraction.extract(cnic,textBlocks);
             StringBuilder detectedText = new StringBuilder();
             for (TextBlock textBlock : textBlocks) {
@@ -90,7 +98,6 @@ public class MainActivity extends CameraActivity {
                     detectedText.append("\n");
                 }
             }
-            // todo same thing as above.
             cnic.setText(detectedText);
             cnic.saveData();
 
