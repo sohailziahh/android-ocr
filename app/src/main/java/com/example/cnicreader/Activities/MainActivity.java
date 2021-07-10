@@ -17,6 +17,8 @@ import com.example.cnicreader.Extraction.DocumentExtraction.Base.BaseDocumentExt
 import com.example.cnicreader.Extraction.DocumentExtraction.DocumentExtractor;
 import com.example.cnicreader.Extraction.DocumentExtraction.Instances.CnicExtractor;
 import com.example.cnicreader.R;
+import com.example.cnicreader.Representation.DocumentRepresentation.Base.BaseDocumentRepresentator;
+import com.example.cnicreader.Representation.DocumentRepresentation.Instances.CnicRepresentator;
 import com.example.cnicreader.databinding.BasicExerciseViewBinding;
 
 import com.google.android.gms.vision.text.TextBlock;
@@ -32,7 +34,6 @@ public class MainActivity extends CameraActivity {
 
     protected BasicExerciseViewBinding viewBinding;
 
-    static Activity mainActivity;
 
     //private TextView detectedTextView;
 
@@ -56,6 +57,7 @@ public class MainActivity extends CameraActivity {
     TextView textView;
     DocumentExtractor extraction;
     BaseDocumentExtractor cnic;
+    BaseDocumentRepresentator setCnicText;
     
 
 
@@ -68,7 +70,8 @@ public class MainActivity extends CameraActivity {
         setContentView(R.layout.activity_main);
         extraction = new BaseDocumentExtractor();
         cnic = new CnicExtractor(this);
-        cnic.initializeViews();
+        setCnicText = new CnicRepresentator(this);
+        setCnicText.initializeViews();
 
 
     }
@@ -98,8 +101,8 @@ public class MainActivity extends CameraActivity {
                     detectedText.append("\n");
                 }
             }
-            cnic.setText(detectedText);
-            cnic.saveData();
+            setCnicText.setText(detectedText);
+            setCnicText.saveData();
 
 
         } finally

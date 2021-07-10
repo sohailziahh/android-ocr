@@ -54,9 +54,7 @@ public class BaseDocumentExtractor extends DocumentExtractor {
 
     }
 
-    public void initializeViews(){
 
-    }
 
     @Override
     public void extract(BaseDocumentExtractor docType, List<TextBlock> textBlocks){

@@ -1,4 +1,10 @@
 package com.example.cnicreader.Representation.DocumentRepresentation;
 
-public class DocumentRepresentator {
+abstract public class DocumentRepresentator {
+
+    abstract public void setText(StringBuilder message);
+
+    abstract public void saveData();
+
+
 }

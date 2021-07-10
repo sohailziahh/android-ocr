@@ -23,6 +23,7 @@ import java.util.List;
 
 public class CnicExtractor extends BaseDocumentExtractor {
 
+
     public String csvName = "CNIC-DATA-" + new Timestamp(System.currentTimeMillis()) + ".csv";
     private String csvDir = "CNIC_DATA/";
     private String csvPath;
@@ -30,30 +31,27 @@ public class CnicExtractor extends BaseDocumentExtractor {
     Calendar year = Calendar.getInstance();
     int curYear = year.get(Calendar.YEAR);
 
-    String gender = "Deciding...";
-    String name = "Deciding...";
-    String fatherName = "Deciding...";
-    String dateOfBirth = "Deciding...";
-    String dateOfIssue = "Deciding...";
-    String dateOfExpiry = "Deciding...";
-    String identityNumber = "Deciding..";
-    String countryOfStay = "Deciding...";
+    static public String gender = "Deciding...";
+    static public String name = "Deciding...";
+    static public String fatherName = "Deciding...";
+    static public String dateOfBirth = "Deciding...";
+    static public String dateOfIssue = "Deciding...";
+    static public String dateOfExpiry = "Deciding...";
+    static public String identityNumber = "Deciding...";
+    static public String countryOfStay = "Deciding...";
     boolean containsDigit = true;
 
     Activity mainActivity;
 
         public CnicExtractor(Activity activity){
             this.mainActivity = activity;
-            csvPath = activity.getExternalFilesDir(csvDir).getAbsolutePath() + "/" + csvName;
+
 
 //
 //
     }
 
-    public void initializeViews(){
-        detectedTextView = mainActivity.findViewById(R.id.detected_text);
-        detectedTextView.setMovementMethod(new ScrollingMovementMethod());
-    }
+
 
     @Override
     public void imageToText (List<TextBlock> textBlocks) {
@@ -128,8 +126,7 @@ public class CnicExtractor extends BaseDocumentExtractor {
                         && (textBlock.getValue().length() == 10)
                         && (!textBlock.getValue().equals(dateOfIssue)))
                     try {
-                        if (textBlock.getValue().split("\\.").length == 3)
-                        {
+                        if (textBlock.getValue().split("\\.").length == 3) {
                             //because NADRA started issuing smartcards from 2012
                             if ((Integer.parseInt(textBlock.getValue().split("\\.")[2])) > 2022)
                                 dateOfExpiry = textBlock.getValue();
@@ -143,17 +140,20 @@ public class CnicExtractor extends BaseDocumentExtractor {
                         && (!textBlock.getValue().equals(dateOfExpiry)))
                     try {
                         if (textBlock.getValue().split("\\.").length == 3) {
-                            if ((Integer.parseInt(textBlock.getValue().split("\\.")[2])) < curYear
-                                    && (Integer.parseInt(textBlock.getValue().split("\\.")[2])) > 2004)
+                            if ((Integer.parseInt(textBlock.getValue().split("\\.")[2])) < 2021
+                                    && (Integer.parseInt(textBlock.getValue().split("\\.")[2])) > 2004) {
                                 dateOfIssue = textBlock.getValue();
+
+                            }
                         }
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }
             }
         }
-        if (!name.equals("Deciding..."))
-            countryOfStay = "Pakistan";
+            if (!name.equals("Deciding...") )
+                countryOfStay = "Pakistan";
+
 
 
     }
@@ -161,62 +161,48 @@ public class CnicExtractor extends BaseDocumentExtractor {
 
 
 
-    @Override
-    public void saveData() {
+//    @Override
+//    public void saveData() {
+//
+//        if (!identityNumber.equals("Deciding...")
+//                && (!dateOfBirth.equals("Deciding..."))
+//                && (!dateOfIssue.equals("Deciding..."))
+//                && (!dateOfExpiry.equals("Deciding..."))
+//                && (!gender.equals("Deciding..."))
+//                && (!fatherName.equals("Deciding..."))
+//                && (!name.equals("Deciding..."))
+//                && (!countryOfStay.equals("Deciding..."))) {
+//
+//            try {
+//                File directory = mainActivity.getExternalFilesDir(csvDir);
+//
+//                if (!directory.exists()) {
+//                    if (!directory.mkdirs()) {
+//                        return;
+//                    }
+//                }
+//                // If you require it to make the entire directory path including parents,
+//                // use directory.mkdirs(); here instead.
+//
+//                try {
+//                    Files.write(Paths.get(csvPath), Collections.singleton("Name: " + name + "\nFather Name: " + fatherName + "\nGender: " + gender +
+//                            "\nIdentity Number: " + identityNumber + "\nDate Of Birth: " + dateOfBirth +
+//                            "\nDate Of Issue: " + dateOfIssue + "\nDate Of Expiry: " + dateOfExpiry + "\nCountry Of Stay: " + countryOfStay));
+//                    dataSaved = true;
+//                    Log.d("file-sohail", csvPath);
+//                    mainActivity.runOnUiThread(() -> Toast.makeText(mainActivity.getBaseContext(), "Date stored in a CSV.", Toast.LENGTH_LONG).show());
+//
+//                } catch (IOException e) {
+//                    Log.e("error", e.getMessage());
+//                }
+//            } catch (Exception e) {
+//                Log.e("error", e.getMessage());
+//            }
+//
+//        }
+//    }
 
-        if (!identityNumber.equals("Deciding...")
-                && (!dateOfBirth.equals("Deciding..."))
-                && (!dateOfIssue.equals("Deciding..."))
-                && (!dateOfExpiry.equals("Deciding..."))
-                && (!gender.equals("Deciding..."))
-                && (!fatherName.equals("Deciding..."))
-                && (!name.equals("Deciding..."))
-                && (!countryOfStay.equals("Deciding..."))) {
 
-            try {
-                File directory = mainActivity.getExternalFilesDir(csvDir);
-
-                if (!directory.exists()) {
-                    if (!directory.mkdirs()) {
-                        return;
-                    }
-                }
-                // If you require it to make the entire directory path including parents,
-                // use directory.mkdirs(); here instead.
-
-                try {
-                    Files.write(Paths.get(csvPath), Collections.singleton("Name: " + name + "\nFather Name: " + fatherName + "\nGender: " + gender +
-                            "\nIdentity Number: " + identityNumber + "\nDate Of Birth: " + dateOfBirth +
-                            "\nDate Of Issue: " + dateOfIssue + "\nDate Of Expiry: " + dateOfExpiry + "\nCountry Of Stay: " + countryOfStay));
-                    dataSaved = true;
-                    Log.d("file-sohail", csvPath);
-                    mainActivity.runOnUiThread(() -> Toast.makeText(mainActivity.getBaseContext(), "Date stored in a CSV.", Toast.LENGTH_LONG).show());
-
-                } catch (IOException e) {
-                    Log.e("error", e.getMessage());
-                }
-            } catch (Exception e) {
-                Log.e("error", e.getMessage());
-            }
-
-        }
-    }
-
-    @Override
-    public void setText(StringBuilder message) {
-
-       detectedTextView.post(new Runnable() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void run()
-            {
-
-                detectedTextView.setText("Name: " + name + "\nFather Name: " + fatherName + "\nGender: " + gender +
-                        "\nIdentity Number: " + identityNumber + "\nDate Of Birth: " + dateOfBirth +
-                        "\nDate Of Issue: " + dateOfIssue + "\nDate Of Expiry: " + dateOfExpiry + "\nCountry Of Stay: " + countryOfStay);
-            }
-        });
-    }
 
 
 
