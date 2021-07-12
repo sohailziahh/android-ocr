@@ -16,6 +16,8 @@ import com.example.cnicreader.Activities.CameraActivity;
 import com.example.cnicreader.Extraction.DocumentExtraction.Base.BaseDocumentExtractor;
 import com.example.cnicreader.Extraction.DocumentExtraction.DocumentExtractor;
 import com.example.cnicreader.Extraction.DocumentExtraction.Instances.CnicExtractor;
+import com.example.cnicreader.MLModel.Instances.BaseTextRecognizer;
+import com.example.cnicreader.MLModel.Instances.MLKitTextRecognizer;
 import com.example.cnicreader.R;
 import com.example.cnicreader.Representation.DocumentRepresentation.Base.BaseDocumentRepresentator;
 import com.example.cnicreader.Representation.DocumentRepresentation.Instances.CnicRepresentator;
@@ -33,6 +35,8 @@ public class MainActivity extends CameraActivity {
     protected RelativeLayout parentContainer;
 
     protected BasicExerciseViewBinding viewBinding;
+
+    public static Activity mainActivity;
 
 
     //private TextView detectedTextView;
@@ -55,10 +59,11 @@ public class MainActivity extends CameraActivity {
     }
 
     TextView textView;
+    BaseTextRecognizer textRecognizer;
     DocumentExtractor extraction;
     BaseDocumentExtractor cnic;
     BaseDocumentRepresentator setCnicText;
-    
+
 
 
 
@@ -68,6 +73,7 @@ public class MainActivity extends CameraActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         extraction = new BaseDocumentExtractor();
         cnic = new CnicExtractor(this);
         setCnicText = new CnicRepresentator(this);
@@ -78,21 +84,9 @@ public class MainActivity extends CameraActivity {
 
 
 
-    private void textRecognition(Bitmap bitmap)
+    public void document(List<TextBlock> textBlocks)
     {
 
-        TextRecognizer textRecognizer = new TextRecognizer.Builder(this).build();
-        try {
-            if (!textRecognizer.isOperational()) {
-                new AlertDialog.
-                        Builder(this).
-                        setMessage("Text recognizer could not be set up on your device").show();
-                return;
-            }
-
-            Log.d("ocr-sohail", "-------");
-            
-            List<TextBlock> textBlocks = extraction.process(bitmap,textRecognizer);
             extraction.extract(cnic,textBlocks);
             StringBuilder detectedText = new StringBuilder();
             for (TextBlock textBlock : textBlocks) {
@@ -104,11 +98,6 @@ public class MainActivity extends CameraActivity {
             setCnicText.setText(detectedText);
             setCnicText.saveData();
 
-
-        } finally
-        {
-            textRecognizer.release();
-        }
     }
 
     Bitmap currentBitmap;
@@ -116,7 +105,8 @@ public class MainActivity extends CameraActivity {
     @Override
     public void processImage(Bitmap bitmap) {
         currentBitmap = bitmap;
-        textRecognition(bitmap);
+        textRecognizer = new MLKitTextRecognizer(this);
+        textRecognizer.textRecognition(bitmap);
     }
 
 
