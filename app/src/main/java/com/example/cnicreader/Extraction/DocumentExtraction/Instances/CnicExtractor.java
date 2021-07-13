@@ -161,46 +161,6 @@ public class CnicExtractor extends BaseDocumentExtractor {
 
 
 
-//    @Override
-//    public void saveData() {
-//
-//        if (!identityNumber.equals("Deciding...")
-//                && (!dateOfBirth.equals("Deciding..."))
-//                && (!dateOfIssue.equals("Deciding..."))
-//                && (!dateOfExpiry.equals("Deciding..."))
-//                && (!gender.equals("Deciding..."))
-//                && (!fatherName.equals("Deciding..."))
-//                && (!name.equals("Deciding..."))
-//                && (!countryOfStay.equals("Deciding..."))) {
-//
-//            try {
-//                File directory = mainActivity.getExternalFilesDir(csvDir);
-//
-//                if (!directory.exists()) {
-//                    if (!directory.mkdirs()) {
-//                        return;
-//                    }
-//                }
-//                // If you require it to make the entire directory path including parents,
-//                // use directory.mkdirs(); here instead.
-//
-//                try {
-//                    Files.write(Paths.get(csvPath), Collections.singleton("Name: " + name + "\nFather Name: " + fatherName + "\nGender: " + gender +
-//                            "\nIdentity Number: " + identityNumber + "\nDate Of Birth: " + dateOfBirth +
-//                            "\nDate Of Issue: " + dateOfIssue + "\nDate Of Expiry: " + dateOfExpiry + "\nCountry Of Stay: " + countryOfStay));
-//                    dataSaved = true;
-//                    Log.d("file-sohail", csvPath);
-//                    mainActivity.runOnUiThread(() -> Toast.makeText(mainActivity.getBaseContext(), "Date stored in a CSV.", Toast.LENGTH_LONG).show());
-//
-//                } catch (IOException e) {
-//                    Log.e("error", e.getMessage());
-//                }
-//            } catch (Exception e) {
-//                Log.e("error", e.getMessage());
-//            }
-//
-//        }
-//    }
 
 
 

@@ -29,7 +29,7 @@ public class MLKitTextRecognizer extends BaseTextRecognizer  {
 
     public MLKitTextRecognizer(Activity activity){
         this.mainActivity = activity;
-        docProcessing = new MainActivity();
+
 
     }
 
@@ -48,7 +48,7 @@ public class MLKitTextRecognizer extends BaseTextRecognizer  {
             Log.d("ocr-sohail", "-------");
 
             List<TextBlock> textBlocks = process(bitmap, textRecognizer);
-            docProcessing.document(textBlocks);
+            MainActivity.mainActivity.document(textBlocks);
         }finally
         {
             textRecognizer.release();

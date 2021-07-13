@@ -36,7 +36,7 @@ public class MainActivity extends CameraActivity {
 
     protected BasicExerciseViewBinding viewBinding;
 
-    public static Activity mainActivity;
+    public static MainActivity mainActivity;
 
 
     //private TextView detectedTextView;
@@ -78,6 +78,7 @@ public class MainActivity extends CameraActivity {
         cnic = new CnicExtractor(this);
         setCnicText = new CnicRepresentator(this);
         setCnicText.initializeViews();
+        mainActivity = this;
 
 
     }
