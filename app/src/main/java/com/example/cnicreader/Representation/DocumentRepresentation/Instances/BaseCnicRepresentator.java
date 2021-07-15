@@ -7,7 +7,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cnicreader.Extraction.DocumentExtraction.Instances.CnicExtractor;
+
+import com.example.cnicreader.Extraction.DocumentExtraction.Instances.BaseCnicExtractor;
 import com.example.cnicreader.R;
 import com.example.cnicreader.Representation.DocumentRepresentation.Base.BaseDocumentRepresentator;
 
@@ -17,7 +18,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 
-public class CnicRepresentator extends BaseDocumentRepresentator {
+
+public class BaseCnicRepresentator extends BaseDocumentRepresentator {
 
     Activity mainActivity;
     TextView detectedTextView;
@@ -32,20 +34,20 @@ public class CnicRepresentator extends BaseDocumentRepresentator {
     String countryOfStay;
 
     public void checking() {
-        name = CnicExtractor.name;
-        fatherName = CnicExtractor.fatherName;
-        gender = CnicExtractor.gender;
-        identityNumber = CnicExtractor.identityNumber;
-        dateOfBirth = CnicExtractor.dateOfBirth;
-        dateOfIssue = CnicExtractor.dateOfIssue;
-        dateOfExpiry = CnicExtractor.dateOfExpiry;
-        countryOfStay = CnicExtractor.countryOfStay;
+        name = BaseCnicExtractor.name;
+        fatherName = BaseCnicExtractor.fatherName;
+        gender = BaseCnicExtractor.gender;
+        identityNumber = BaseCnicExtractor.identityNumber;
+        dateOfBirth = BaseCnicExtractor.dateOfBirth;
+        dateOfIssue = BaseCnicExtractor.dateOfIssue;
+        dateOfExpiry = BaseCnicExtractor.dateOfExpiry;
+        countryOfStay = BaseCnicExtractor.countryOfStay;
     }
 
 
 
 
-    public CnicRepresentator(Activity activity){
+    public BaseCnicRepresentator(Activity activity){
         super(activity);
         this.mainActivity = activity;
 

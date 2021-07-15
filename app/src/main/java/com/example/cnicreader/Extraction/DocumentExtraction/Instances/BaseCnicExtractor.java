@@ -21,13 +21,11 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class CnicExtractor extends BaseDocumentExtractor {
+public class BaseCnicExtractor extends BaseDocumentExtractor {
 
 
     public String csvName = "CNIC-DATA-" + new Timestamp(System.currentTimeMillis()) + ".csv";
     private String csvDir = "CNIC_DATA/";
-    private String csvPath;
-    private TextView detectedTextView;
     Calendar year = Calendar.getInstance();
     int curYear = year.get(Calendar.YEAR);
 
@@ -43,7 +41,7 @@ public class CnicExtractor extends BaseDocumentExtractor {
 
     Activity mainActivity;
 
-        public CnicExtractor(Activity activity){
+        public BaseCnicExtractor(Activity activity){
             this.mainActivity = activity;
 
 
@@ -151,13 +149,13 @@ public class CnicExtractor extends BaseDocumentExtractor {
                     }
             }
         }
-            if (!name.equals("Deciding...") )
+            if (!name.equals("Deciding..."))
                 countryOfStay = "Pakistan";
 
 
 
     }
-  boolean dataSaved;
+
 
 
 

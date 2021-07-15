@@ -17,27 +17,7 @@ import java.util.List;
 
 public class BaseDocumentExtractor extends DocumentExtractor  {
 
-//    public List<TextBlock> process(Bitmap bitmap, TextRecognizer textRecognizer) {
-//        Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-//        SparseArray<TextBlock> origTextBlocks = textRecognizer.detect(frame);
-//        List<TextBlock> textBlocks = new ArrayList<>();
-//        for (int i = 0; i < origTextBlocks.size(); i++) {
-//            TextBlock textBlock = origTextBlocks.valueAt(i);
-//            textBlocks.add(textBlock);
-//            Log.d("ocr-sohail", "" + textBlock.getValue() + " - " + textBlock.getValue().length());
-//        }
-//
-//        textBlocks.sort((o1, o2) -> {
-//            int diffOfTops = o1.getBoundingBox().top - o2.getBoundingBox().top;
-//            int diffOfLefts = o1.getBoundingBox().left - o2.getBoundingBox().left;
-//            if (diffOfTops != 0) {
-//                return diffOfTops;
-//            }
-//            return diffOfLefts;
-//        });
-//
-//        return textBlocks;
-//    }
+
 
 
     @Override
@@ -55,15 +35,37 @@ public class BaseDocumentExtractor extends DocumentExtractor  {
 
     }
 
-
-
     @Override
-    public void extract(BaseDocumentExtractor docType, List<TextBlock> textBlocks){
-        docType.imageToText(textBlocks);
+    public List<TextBlock> process(Bitmap bitmap, TextRecognizer textRecognizer) {
+
+        Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+        SparseArray<TextBlock> origTextBlocks = textRecognizer.detect(frame);
+        List<TextBlock> textBlocks = new ArrayList<>();
+
+        for (int i = 0; i < origTextBlocks.size(); i++) {
+            Log.d("check","hello");
+            TextBlock textBlock = origTextBlocks.valueAt(i);
+            textBlocks.add(textBlock);
+            Log.d("ocr-sohail", "" + textBlock.getValue() + " - " + textBlock.getValue().length());
+
+        }
+
+        textBlocks.sort((o1, o2) -> {
+            int diffOfTops = o1.getBoundingBox().top - o2.getBoundingBox().top;
+            int diffOfLefts = o1.getBoundingBox().left - o2.getBoundingBox().left;
+            if (diffOfTops != 0) {
+                return diffOfTops;
+            }
+            return diffOfLefts;
+        });
+
+        return textBlocks;
+    }
 
 
 
-}
+
+
 
 
 

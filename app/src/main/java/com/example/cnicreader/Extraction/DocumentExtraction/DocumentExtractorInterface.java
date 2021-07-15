@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface DocumentExtractorInterface {
 
-     //List<TextBlock> process(Bitmap bitmap, TextRecognizer textRecognizer);
+     List<TextBlock> process(Bitmap bitmap, TextRecognizer textRecognizer);
 }

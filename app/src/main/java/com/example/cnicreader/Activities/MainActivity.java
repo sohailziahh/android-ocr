@@ -3,24 +3,20 @@ package com.example.cnicreader.Activities;
 import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.cnicreader.Activities.CameraActivity;
 import com.example.cnicreader.Extraction.DocumentExtraction.Base.BaseDocumentExtractor;
 import com.example.cnicreader.Extraction.DocumentExtraction.DocumentExtractor;
-import com.example.cnicreader.Extraction.DocumentExtraction.Instances.CnicExtractor;
+import com.example.cnicreader.Extraction.DocumentExtraction.Instances.BaseCnicExtractor;
 import com.example.cnicreader.MLModel.Instances.BaseTextRecognizer;
 import com.example.cnicreader.MLModel.Instances.MLKitTextRecognizer;
 import com.example.cnicreader.R;
 import com.example.cnicreader.Representation.DocumentRepresentation.Base.BaseDocumentRepresentator;
-import com.example.cnicreader.Representation.DocumentRepresentation.Instances.CnicRepresentator;
+import com.example.cnicreader.Representation.DocumentRepresentation.Instances.BaseCnicRepresentator;
 import com.example.cnicreader.databinding.BasicExerciseViewBinding;
 
 import com.google.android.gms.vision.text.TextBlock;
@@ -59,13 +55,11 @@ public class MainActivity extends CameraActivity {
     }
 
     TextView textView;
+
     BaseTextRecognizer textRecognizer;
-    DocumentExtractor extraction;
     BaseDocumentExtractor cnic;
     BaseDocumentRepresentator setCnicText;
-
-
-
+    DocumentExtractor extraction;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -74,21 +68,19 @@ public class MainActivity extends CameraActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        cnic = new BaseCnicExtractor(this);
+        setCnicText = new BaseCnicRepresentator(this);
         extraction = new BaseDocumentExtractor();
-        cnic = new CnicExtractor(this);
-        setCnicText = new CnicRepresentator(this);
         setCnicText.initializeViews();
         mainActivity = this;
-
-
     }
 
 
 
-    public void document(List<TextBlock> textBlocks)
+    public void document(Bitmap bitmap, TextRecognizer textRecognizer)
     {
-
-            extraction.extract(cnic,textBlocks);
+        List<TextBlock> textBlocks = extraction.process(bitmap, textRecognizer);
+            extract(cnic,textBlocks);
             StringBuilder detectedText = new StringBuilder();
             for (TextBlock textBlock : textBlocks) {
                 if (textBlock != null && textBlock.getValue() != null) {
@@ -96,8 +88,8 @@ public class MainActivity extends CameraActivity {
                     detectedText.append("\n");
                 }
             }
-            setCnicText.setText(detectedText);
-            setCnicText.saveData();
+            setText(setCnicText,detectedText);
+            saveData(setCnicText);
 
     }
 
@@ -130,5 +122,19 @@ public class MainActivity extends CameraActivity {
     public void onStart()
     {
         super.onStart();
+    }
+
+    public void extract(BaseDocumentExtractor docType, List<TextBlock> textBlocks){
+        docType.imageToText(textBlocks);
+
+
+
+    }
+    public void setText(BaseDocumentRepresentator set,StringBuilder detectedText){
+        set.setText(detectedText);
+    }
+
+    public void saveData(BaseDocumentRepresentator set){
+        set.saveData();
     }
 }
