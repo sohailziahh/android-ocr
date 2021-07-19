@@ -42,8 +42,9 @@ public class BaseDocumentExtractor extends DocumentExtractor  {
 
 
         for (int i = 0; i < origTextBlocks.size(); i++) {
-            Log.d("check","hello");
+
             TextBlock textBlock = origTextBlocks.valueAt(i);
+
             textBlocks.add(textBlock);
             Log.d("ocr-sohail", "" + textBlock.getValue() + " - " + textBlock.getValue().length());
 
@@ -58,29 +59,48 @@ public class BaseDocumentExtractor extends DocumentExtractor  {
             return diffOfLefts;
         });
 
-        return textBlocks;
+        List<TextBlock> lineFrames = intersectionOverUnion(textBlocks);
+
+
+        return lineFrames;
     }
 
-//    public List<TextBlock> processAlt(Bitmap bitmap, TextRecognizer textRecognizer){
-//        Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-//        SparseArray<TextBlock> origTextBlocks = textRecognizer.detect(frame);
-//        List<TextBlock> textBlocks = new ArrayList<>();
-//        Canvas canvas = new Canvas(bitmap);
-//        Paint paint = new Paint();
-//        for (int i = 0; i < origTextBlocks.size(); i++) {
-//            TextBlock line = origTextBlocks.valueAt(i);
-//            Rect lineFrame = line.getBoundingBox();
-//            canvas.drawRect(lineFrame, paint);
-//            textBlocks.add(line);
-//
-//
-//        }
-//
-//
-//
-//
-//    return textBlocks;
-//    }
+    public List<TextBlock> intersectionOverUnion(List<TextBlock> textBlocks){
+        List<TextBlock> lineFrames = new ArrayList<>();
+        double x_overlap,y_overlap,overlapArea,unionArea;
+        double score;
+        
+        
+        for (int i = 1; i < textBlocks.size(); i++) {
+            //intersection area
+            x_overlap = Math.max(0, Math.min(textBlocks.get(i).getBoundingBox().right, textBlocks.get(i-1).getBoundingBox().right) - Math.max(textBlocks.get(i).getBoundingBox().left, textBlocks.get(i-1).getBoundingBox().left));
+            y_overlap = Math.max(0, Math.min(textBlocks.get(i).getBoundingBox().bottom, textBlocks.get(i-1).getBoundingBox().bottom) - Math.max(textBlocks.get(i).getBoundingBox().top, textBlocks.get(i-1).getBoundingBox().top));
+            overlapArea = x_overlap * y_overlap;
+
+            Log.d("check", "method working");
+
+            //union area
+            unionArea = (textBlocks.get(i).getBoundingBox().height() * textBlocks.get(i).getBoundingBox().width()) +
+                    (textBlocks.get(i-1).getBoundingBox().height() * textBlocks.get(i-1).getBoundingBox().width()) -
+                    overlapArea;
+            
+            //intersection over union
+            score = overlapArea/unionArea;
+            
+            if (score < 0.5)
+                lineFrames.add(textBlocks.get(i));
+                
+
+            
+            
+        }
+        return lineFrames;
+
+
+
+    }
+
+
 
 
 
