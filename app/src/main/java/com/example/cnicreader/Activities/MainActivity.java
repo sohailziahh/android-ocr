@@ -4,15 +4,20 @@ import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.cnicreader.Extraction.DocumentExtraction.Base.BaseDocumentExtractor;
 import com.example.cnicreader.Extraction.DocumentExtraction.DocumentExtractor;
 import com.example.cnicreader.Extraction.DocumentExtraction.Instances.BaseCnicExtractor;
-import com.example.cnicreader.ImageCanvas;
+import com.example.cnicreader.views.ImageCanvas;
 import com.example.cnicreader.MLModel.Instances.BaseTextRecognizer;
 import com.example.cnicreader.MLModel.Instances.MLKitTextRecognizer;
 import com.example.cnicreader.R;
@@ -35,8 +40,11 @@ public class MainActivity extends CameraActivity {
 
     public static MainActivity mainActivity;
 
-    public ImageCanvas canvas;
+    ImageView drawingImageView;
 
+    Paint paint;
+
+    Rect lineFrame;
 
     //private TextView detectedTextView;
 
@@ -44,6 +52,7 @@ public class MainActivity extends CameraActivity {
     {
         viewBinding = getViewBinding();
         parentContainer = findViewById(R.id.containerParent);
+
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         parentContainer.addView(viewBinding.getRoot(), layoutParams);
 
@@ -70,26 +79,34 @@ public class MainActivity extends CameraActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        canvas = new ImageCanvas(this);
-        //setContentView(canvas);
+        paint = new Paint();
         cnic = new BaseCnicExtractor(this);
         setCnicText = new BaseCnicRepresentator(this);
         extraction = new BaseDocumentExtractor();
         setCnicText.initializeViews();
 
         mainActivity = this;
+      ;
     }
 
 
 
     public void document(Bitmap bitmap, TextRecognizer textRecognizer)
     {
+        Canvas canvas = new Canvas(bitmap);
+
+
+        paint.setColor(Color.GREEN);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(5);
         List<TextBlock> textBlocks = extraction.process(bitmap, textRecognizer);
             extract(cnic,textBlocks);
             StringBuilder detectedText = new StringBuilder();
             for (TextBlock textBlock : textBlocks) {
                 if (textBlock != null && textBlock.getValue() != null) {
+                    lineFrame = textBlock.getBoundingBox();
+                    canvas.drawRect(lineFrame,paint);
+
                     detectedText.append(textBlock.getValue());
                     detectedText.append("\n");
                 }

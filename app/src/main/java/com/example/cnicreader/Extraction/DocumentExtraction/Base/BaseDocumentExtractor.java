@@ -1,18 +1,12 @@
 package com.example.cnicreader.Extraction.DocumentExtraction.Base;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.Log;
 import android.util.SparseArray;
 
 import com.example.cnicreader.Extraction.DocumentExtraction.DocumentExtractor;
-import com.example.cnicreader.MLModel.ModelInterface;
+import com.example.cnicreader.views.ImageCanvas;
 import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 

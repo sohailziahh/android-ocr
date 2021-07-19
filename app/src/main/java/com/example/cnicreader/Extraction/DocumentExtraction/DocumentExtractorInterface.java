@@ -2,6 +2,7 @@ package com.example.cnicreader.Extraction.DocumentExtraction;
 
 import android.graphics.Bitmap;
 
+import com.example.cnicreader.views.ImageCanvas;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 

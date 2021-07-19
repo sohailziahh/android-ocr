@@ -1,4 +1,4 @@
-package com.example.cnicreader;
+package com.example.cnicreader.views;
 
 import android.content.Context;
 import android.graphics.Canvas;

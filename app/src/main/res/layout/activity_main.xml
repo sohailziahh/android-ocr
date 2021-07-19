@@ -10,7 +10,18 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+        <com.example.cnicreader.views.OverlayView
+            android:id="@+id/tracking_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+
+    </FrameLayout>
+
+
 
 <!--    <org.opencv.android.JavaCameraView-->
 <!--        android:layout_width="match_parent"-->
@@ -33,16 +44,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentTop="true"/>
 
-        <com.example.cnicreader.views.OverlayView
-            android:id="@+id/tracking_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@id/texture"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
-
-<!--    </RelativeLayout>-->
+    <!--    </RelativeLayout>-->
 
 <!--    <TextView-->
 <!--        android:id="@+id/text_view"-->
