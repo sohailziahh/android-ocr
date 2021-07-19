@@ -41,9 +41,7 @@ public class BaseDocumentExtractor extends DocumentExtractor  {
 
     @Override
     public List<TextBlock> process(Bitmap bitmap, TextRecognizer textRecognizer) {
-        Canvas canvas = new Canvas(bitmap);
-        Paint paint = new Paint();
-        paint.setColor(Color.rgb(0,0,0));
+
         Frame frame = new Frame.Builder().setBitmap(bitmap).build();
         SparseArray<TextBlock> origTextBlocks = textRecognizer.detect(frame);
         List<TextBlock> textBlocks = new ArrayList<>();
@@ -52,10 +50,7 @@ public class BaseDocumentExtractor extends DocumentExtractor  {
         for (int i = 0; i < origTextBlocks.size(); i++) {
             Log.d("check","hello");
             TextBlock textBlock = origTextBlocks.valueAt(i);
-            Rect lineFrame = textBlock.getBoundingBox();
-            canvas.drawRect(lineFrame,paint);
             textBlocks.add(textBlock);
-
             Log.d("ocr-sohail", "" + textBlock.getValue() + " - " + textBlock.getValue().length());
 
         }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.cnicreader.Extraction.DocumentExtraction.Base.BaseDocumentExtractor;
 import com.example.cnicreader.Extraction.DocumentExtraction.DocumentExtractor;
 import com.example.cnicreader.Extraction.DocumentExtraction.Instances.BaseCnicExtractor;
+import com.example.cnicreader.ImageCanvas;
 import com.example.cnicreader.MLModel.Instances.BaseTextRecognizer;
 import com.example.cnicreader.MLModel.Instances.MLKitTextRecognizer;
 import com.example.cnicreader.R;
@@ -33,6 +34,8 @@ public class MainActivity extends CameraActivity {
     protected BasicExerciseViewBinding viewBinding;
 
     public static MainActivity mainActivity;
+
+    public ImageCanvas canvas;
 
 
     //private TextView detectedTextView;
@@ -68,10 +71,13 @@ public class MainActivity extends CameraActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        canvas = new ImageCanvas(this);
+        //setContentView(canvas);
         cnic = new BaseCnicExtractor(this);
         setCnicText = new BaseCnicRepresentator(this);
         extraction = new BaseDocumentExtractor();
         setCnicText.initializeViews();
+
         mainActivity = this;
     }
 
