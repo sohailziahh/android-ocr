@@ -84,54 +84,52 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
                     && (s.contains("-"))
                     && (s.contains("."))) {
 
-                s = textBlock.getValue();
+                String string = textBlock.getValue();
                 //identityNumberCheck
-                if ((s.split(" ")[0].length() == 15) && (s.split(" ")[0].contains("-")))
-                    identityNumber = s.split(" ")[0];
+                if ((string.split(" ")[0].length() == 15) && (string.split(" ")[0].contains("-")))
+                    identityNumber = string.split(" ")[0];
                 //dateOfBirthCheck
-                if ((s.split(" ")[1].length() == 10) && (s.split(" ")[1].contains("."))) {
-                    if (s.split("\\.").length == 3) {
+                if ((string.split(" ")[1].length() == 10) && (string.split(" ")[1].contains("."))) {
+                    if (string.split("\\.").length == 3) {
                         // age cannot be less than 18
-                        if ((Integer.parseInt(s.split(" ")[1].split("\\.")[2])) < 2004)
-                            dateOfBirth = s.split(" ")[1];
+                        if ((Integer.parseInt(string.split(" ")[1].split("\\.")[2])) < 2004)
+                            dateOfBirth = string.split(" ")[1];
                     }
                 }
             } else if (dateOfBirth.equals("Deciding...")
-                    && (textBlock.getValue().length() == 10)
-                    && (textBlock.getValue().contains("."))) {
-                if (textBlock.getValue().split("\\.").length == 3) {
+                    && (s.length() == 10)
+                    && (s.contains("."))) {
+                if (s.split("\\.").length == 3) {
                     // age cannot be less than 18
-                    if ((Integer.parseInt(textBlock.getValue().split("\\.")[2])) < 2004)
-                        dateOfBirth = textBlock.getValue();
+                    if ((Integer.parseInt(s.split("\\.")[2])) < 2004)
+                        dateOfBirth = s;
                 }
-            } else if ((identityNumber.equals("Deciding..."))
-                    && (textBlock.getValue().contains("-"))
-                    && (textBlock.getValue().length() == 15)) {
-                String string = textBlock.getValue();
-                if (string.substring(5).equals("-") && string.substring(13).equals("-"))
-                    identityNumber = string;
+            } else if ((identityNumber.equals("Deciding...")) && (Pattern.matches("[-]{15}", s))) {
+                //String string = textBlock.getValue();
+                //if (string.substring(5).equals("-") && string.substring(13).equals("-"))
+                    identityNumber = s;
             } else if ((dateOfExpiry.equals("Deciding...")) && !(dateOfIssue.equals("Deciding..."))) {
-                if (textBlock.getValue().contains(".")
-                        && (textBlock.getValue().length() == 10)
-                        && (!textBlock.getValue().equals(dateOfIssue)))
+                if (s.contains(".")
+                        && (s.length() == 10)
+                        && (s.equals(dateOfIssue)))
                     try {
-                        if (textBlock.getValue().split("\\.").length == 3) {
+                        if (s.split("\\.").length == 3) {
                             //because NADRA started issuing smartcards from 2012
-                            if ((Integer.parseInt(textBlock.getValue().split("\\.")[2])) > 2022)
-                                dateOfExpiry = textBlock.getValue();
+                            if ((Integer.parseInt(s.split("\\.")[2])) > 2022)
+                                dateOfExpiry = s;
                         }
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }
             } else if ((dateOfIssue.equals("Deciding..."))) {
-                if (textBlock.getValue().contains(".")
-                        && (textBlock.getValue().length() == 10)
-                        && (!textBlock.getValue().equals(dateOfExpiry)))
+                if (s.contains(".")
+                        && (s.length() == 10)
+                        && (!s.equals(dateOfExpiry)))
                     try {
-                        if (textBlock.getValue().split("\\.").length == 3) {
-                            if ((Integer.parseInt(textBlock.getValue().split("\\.")[2])) < 2021
-                                    && (Integer.parseInt(textBlock.getValue().split("\\.")[2])) > 2004) {
-                                dateOfIssue = textBlock.getValue();
+                        if (s.split("\\.").length == 3) {
+                            if ((Integer.parseInt(s.split("\\.")[2])) < 2021
+                                    && (Integer.parseInt(s.split("\\.")[2])) > 2004) {
+                                dateOfIssue = s;
 
                             }
                         }
