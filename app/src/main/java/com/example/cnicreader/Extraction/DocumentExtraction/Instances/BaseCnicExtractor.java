@@ -20,6 +20,8 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BaseCnicExtractor extends BaseDocumentExtractor {
 
@@ -58,51 +60,40 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
             TextBlock textBlock = textBlocks.get(i);
             String s = textBlock.getValue();
             s = s.trim();
+            Pattern namePattern = Pattern.compile("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$");
             if (name.equals("Deciding...") && (s.equals("Name"))) {
                 String tempTextBlockValue = textBlocks.get(i + 1).getValue();
-                char[] characters = tempTextBlockValue.toCharArray();
-                containsDigit = false;
-                for (char c : characters) {
-                    if (Character.isDigit(c))
-                        containsDigit = true;
-                }
-                if (!containsDigit)
+                Matcher m = namePattern.matcher(tempTextBlockValue);
+                if (m.matches()){
                     name = tempTextBlockValue;
-            } else if (fatherName.equals("Deciding...") && (s.equals("Father Name"))) {
-                String tempTextBlockValue = textBlocks.get(i + 1).getValue();
-                char[] characters = tempTextBlockValue.toCharArray();
-                containsDigit = false;
-                for (char c : characters) {
-                    if (Character.isDigit(c))
-                        containsDigit = true;
                 }
-                if (!containsDigit)
+
+            } else if (fatherName.equals("Deciding...") && ((s.equals("Father Name")))) {
+                String tempTextBlockValue = textBlocks.get(i + 1).getValue();
+                Matcher m = namePattern.matcher(tempTextBlockValue);
+                if (m.matches()) {
                     fatherName = tempTextBlockValue;
-            } else if (gender.equals("Deciding...")
-                    && (textBlock.getValue().contains("M"))
-                    && (textBlock.getValue().indexOf("M") == 0)
-                    && (textBlock.getValue().length() == 1)) {
+                }
+
+            } else if (gender.equals("Deciding...") && (Pattern.matches("M", s))) {
                 gender = "Male";
-            } else if (gender.equals("Deciding...")
-                    && (textBlock.getValue().contains("F"))
-                    && (textBlock.getValue().indexOf("F") == 0)
-                    && textBlock.getValue().length() == 1) {
+            } else if (gender.equals("Deciding...") && (Pattern.matches("F", s))) {
                 gender = "Female";
             } else if (((identityNumber.equals("Deciding..."))
                     || dateOfBirth.equals("Deciding..."))
-                    && (textBlock.getValue().contains("-"))
-                    && (textBlock.getValue().contains("."))) {
+                    && (s.contains("-"))
+                    && (s.contains("."))) {
 
-                String string = textBlock.getValue();
+                s = textBlock.getValue();
                 //identityNumberCheck
-                if ((string.split(" ")[0].length() == 15) && (string.split(" ")[0].contains("-")))
-                    identityNumber = string.split(" ")[0];
+                if ((s.split(" ")[0].length() == 15) && (s.split(" ")[0].contains("-")))
+                    identityNumber = s.split(" ")[0];
                 //dateOfBirthCheck
-                if ((string.split(" ")[1].length() == 10) && (string.split(" ")[1].contains("."))) {
-                    if (textBlock.getValue().split("\\.").length == 3) {
+                if ((s.split(" ")[1].length() == 10) && (s.split(" ")[1].contains("."))) {
+                    if (s.split("\\.").length == 3) {
                         // age cannot be less than 18
-                        if ((Integer.parseInt(string.split(" ")[1].split("\\.")[2])) < 2004)
-                            dateOfBirth = string.split(" ")[1];
+                        if ((Integer.parseInt(s.split(" ")[1].split("\\.")[2])) < 2004)
+                            dateOfBirth = s.split(" ")[1];
                     }
                 }
             } else if (dateOfBirth.equals("Deciding...")
