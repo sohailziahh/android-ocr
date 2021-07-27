@@ -34,6 +34,11 @@ public class BaseDocumentExtractor extends DocumentExtractor  {
     }
 
     @Override
+    public void alternateToText(List<TextBlock> textBlocks) {
+
+    }
+
+    @Override
     public List<TextBlock> process(Bitmap bitmap, TextRecognizer textRecognizer) {
 
         Frame frame = new Frame.Builder().setBitmap(bitmap).build();

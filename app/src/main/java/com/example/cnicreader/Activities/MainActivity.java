@@ -148,7 +148,7 @@ public class MainActivity extends CameraActivity {
     }
 
     public void extract(BaseDocumentExtractor docType, List<TextBlock> textBlocks){
-        docType.imageToText(textBlocks);
+        docType.alternateToText(textBlocks);
 
 
 

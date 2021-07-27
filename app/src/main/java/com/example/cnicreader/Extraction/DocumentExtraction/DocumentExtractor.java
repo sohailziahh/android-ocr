@@ -15,4 +15,5 @@ abstract public class DocumentExtractor implements DocumentExtractorInterface {
     abstract public void saveData();
 
 
+    public abstract void alternateToText(List<TextBlock> textBlocks);
 }

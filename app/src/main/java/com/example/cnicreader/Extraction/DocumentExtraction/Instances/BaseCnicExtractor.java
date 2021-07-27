@@ -19,7 +19,10 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,9 +45,27 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
     boolean containsDigit = true;
 
     Activity mainActivity;
+    HashMap<String, String> patterns = new HashMap<>();
+    HashMap<String, String> values = new HashMap<>();
 
-        public BaseCnicExtractor(Activity activity){
-            this.mainActivity = activity;
+    public BaseCnicExtractor(Activity activity) {
+        this.mainActivity = activity;
+
+        patterns.put("Gender","/^[FM]$/");
+        patterns.put("Country of Stay","^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$");
+        patterns.put("Identity Number","[-]{15}");
+        patterns.put("Date of Birth","^[.]{10}");
+        patterns.put("Date of Issue","^[.]{10}");
+        patterns.put("Date of Expiry","^[.]{10}");
+
+        values.put("Name","Deciding...");
+        values.put("Father Name","Deciding...");
+        values.put("Gender","Deciding...");
+        values.put("Country of Stay","Deciding...");
+        values.put("Identity Number","Deciding...");
+        values.put("Date of Birth","Deciding...");
+        values.put("Date of Issue","Deciding...");
+        values.put("Date of Expiry","Deciding...");
 
 
 //
@@ -52,9 +73,8 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
     }
 
 
-
     @Override
-    public void imageToText (List<TextBlock> textBlocks) {
+    public void imageToText(List<TextBlock> textBlocks) {
 
         for (int i = 0; i < textBlocks.size(); i++) {
             TextBlock textBlock = textBlocks.get(i);
@@ -64,7 +84,7 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
             if (name.equals("Deciding...") && (s.equals("Name"))) {
                 String tempTextBlockValue = textBlocks.get(i + 1).getValue();
                 Matcher m = namePattern.matcher(tempTextBlockValue);
-                if (m.matches()){
+                if (m.matches()) {
                     name = tempTextBlockValue;
                 }
 
@@ -107,7 +127,7 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
             } else if ((identityNumber.equals("Deciding...")) && (Pattern.matches("[-]{15}", s))) {
                 //String string = textBlock.getValue();
                 //if (string.substring(5).equals("-") && string.substring(13).equals("-"))
-                    identityNumber = s;
+                identityNumber = s;
             } else if ((dateOfExpiry.equals("Deciding...")) && !(dateOfIssue.equals("Deciding..."))) {
                 if (s.contains(".")
                         && (s.length() == 10)
@@ -138,22 +158,48 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
                     }
             }
         }
-            if (!name.equals("Deciding..."))
-                countryOfStay = "Pakistan";
-
+        if (!name.equals("Deciding..."))
+            countryOfStay = "Pakistan";
 
 
     }
 
+    public void alternateToText(List<TextBlock> textBlocks) {
+            for (int i = 0; i < textBlocks.size(); i++) {
+                TextBlock textBlock = textBlocks.get(i);
+                String s = textBlock.getValue();
+                s = s.trim();
+
+
+                    if (s.equals("Name") || s.equals("Father Name")){
+                        String tempString = textBlocks.get(i + 1).getValue();
+                        if (Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",tempString)) {
+                            values.replace(s, tempString);
+                        }
+                }
+                    else{
+                        Iterator pIter = patterns.entrySet().iterator();
+                        while (pIter.hasNext()){
+                            Map.Entry element = (Map.Entry) pIter.next();
+                            if (Pattern.matches(element.getValue().toString(),s)){
+                                values.replace(element.getKey().toString(),s);
+                                //patterns.remove(element.getKey());
+                            }
+                        }
+
+                    }
+
+            }
+            name = values.get("Name");
+            fatherName = values.get("Father Name");
+            gender = values.get("Gender");
+            countryOfStay = values.get("Country of Stay");
+            identityNumber = values.get("Identity Number");
+            dateOfBirth = values.get("Date of Birth");
+            dateOfIssue = values.get("Date of Issue");
+            dateOfExpiry = values.get("Date of Expiry");
 
 
 
-
-
-
-
-
-
-
-
+    }
 }
