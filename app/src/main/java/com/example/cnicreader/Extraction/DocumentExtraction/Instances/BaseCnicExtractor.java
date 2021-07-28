@@ -106,7 +106,7 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
 
                 String string = textBlock.getValue();
                 //identityNumberCheck
-                if ((string.split(" ")[0].length() == 15) && (string.split(" ")[0].contains("-")))
+                if ((string.split(" ")[0].length() == 15) && (Pattern.matches("[0-9-]+",string)))
                     identityNumber = string.split(" ")[0];
                 //dateOfBirthCheck
                 if ((string.split(" ")[1].length() == 10) && (string.split(" ")[1].contains("."))) {
@@ -165,31 +165,48 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
     }
 
     public void alternateToText(List<TextBlock> textBlocks) {
+
             for (int i = 0; i < textBlocks.size(); i++) {
                 TextBlock textBlock = textBlocks.get(i);
                 String s = textBlock.getValue();
                 s = s.trim();
 
 
-                    if (s.equals("Name") || s.equals("Father Name")){
-                        String tempString = textBlocks.get(i + 1).getValue();
-                        if (Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",tempString)) {
-                            values.replace(s, tempString);
+                if (s.equals("Name") || s.equals("Father Name")) {
+                    String tempString = textBlocks.get(i + 1).getValue();
+                    if (Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", tempString)) {
+                        values.replace(s, tempString);
+                    }
+                } else {
+                    Iterator pIter = patterns.entrySet().iterator();
+                    String string = textBlock.getValue();
+
+
+                    while (pIter.hasNext()) {
+                        Map.Entry element = (Map.Entry) pIter.next();
+
+                        if (Pattern.matches(element.getValue().toString(), s)) {
+                            if (values.get(element.getKey().toString()) == "Deciding...")
+                            values.replace(element.getKey().toString(), s);
+                            //patterns.remove(element.getKey());
+
+                        } else if (Pattern.matches(element.getValue().toString(), string.split(" ")[0])) {
+                            if (values.get(element.getKey().toString()) == "Deciding...")
+                            values.replace(element.getKey().toString(), string.split(" ")[0]);
                         }
-                }
-                    else{
-                        Iterator pIter = patterns.entrySet().iterator();
-                        while (pIter.hasNext()){
-                            Map.Entry element = (Map.Entry) pIter.next();
-                            if (Pattern.matches(element.getValue().toString(),s)){
-                                values.replace(element.getKey().toString(),s);
-                                //patterns.remove(element.getKey());
-                            }
+
+                        else if ((s.contains("-") && s.contains(".")) && (Pattern.matches(element.getValue().toString(), string.split(" ")[1]))) {
+                            if (values.get(element.getKey().toString()) == "Deciding...")
+                            values.replace(element.getKey().toString(), string.split(" ")[1]);
                         }
+
 
                     }
 
+                }
+
             }
+
             name = values.get("Name");
             fatherName = values.get("Father Name");
             gender = values.get("Gender");
