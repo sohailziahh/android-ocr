@@ -42,7 +42,7 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
     static public String dateOfExpiry = "Deciding...";
     static public String identityNumber = "Deciding...";
     static public String countryOfStay = "Deciding...";
-    boolean containsDigit = true;
+
 
     Activity mainActivity;
     HashMap<String, String> patterns = new HashMap<>();
@@ -52,7 +52,7 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
         this.mainActivity = activity;
 
         patterns.put("Gender","^M?$|^F?$");
-        patterns.put("Country of Stay","^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$");
+        //patterns.put("Country of Stay","^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$");
         patterns.put("Identity Number","^[0-9]{5}-[0-9]{7}-[0-9]$");
         patterns.put("Date of Birth","^\\s*(3[01]|[12][0-9]|0?[1-9])\\.(1[012]|0?[1-9])\\.((?:19|20)\\d{2})\\s*$");
         patterns.put("Date of Issue","^\\s*(3[01]|[12][0-9]|0?[1-9])\\.(1[012]|0?[1-9])\\.((?:19|20)\\d{2})\\s*$");
@@ -172,7 +172,8 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
                 s = s.trim();
 
 
-                if (s.equals("Name") || s.equals("Father Name")) {
+                //name and father name
+                if (s.equals("Name") || s.equals("Father Name") && (name.equals("Deciding...") || fatherName.equals("Deciding..."))) {
                     String tempString = textBlocks.get(i + 1).getValue();
                     if (Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", tempString)) {
                         values.replace(s, tempString);
@@ -181,27 +182,32 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
                     Iterator pIter = patterns.entrySet().iterator();
                     String string = textBlock.getValue();
 
-
                     while (pIter.hasNext()) {
                         Map.Entry element = (Map.Entry) pIter.next();
 
+                        //date of birth
                         if ((string.split(" ").length == 2) && (Pattern.matches(element.getValue().toString(), string.split(" ")[1]))) {
-                            Log.d("asfdfhd","workinggggggggggggggggggggggggggggggggggggg");
-                            if (values.get(element.getKey().toString()) == "Deciding...")
-                                values.replace("Date of Birth", string.split(" ")[1]);
+                            if (Integer.parseInt(s.split("\\.")[2]) < 2004 ) {
+                                if (values.get("Date of Birth") == "Deciding...")
+                                    values.replace("Date of Birth", string.split(" ")[1]);
+                            }
                         }
-
+                        // gender, date of issue, date of expiry
                         else if (Pattern.matches(element.getValue().toString(), s)) {
                             if (values.get(element.getKey().toString()) == "Deciding...") {
                                 if (s.split("\\.").length == 3) {
-                                    if ((Integer.parseInt(s.split("\\.")[2])) > 2022)
+                                    if (Integer.parseInt(s.split("\\.")[2]) <= 2021 && Integer.parseInt(s.split("\\.")[2]) >2004)
+                                        values.replace("Date of Issue", s);
+                                    else if ((Integer.parseInt(s.split("\\.")[2])) > 2022)
                                         values.replace("Date of Expiry", s);
-                                    values.replace(element.getKey().toString(), s);
                                 }
+                                else
+                                    values.replace(element.getKey().toString(), s);
                             }
-                            //patterns.remove(element.getKey());
 
-                        } else if (((string.split(" ").length == 2) ) && Pattern.matches(element.getValue().toString(), string.split(" ")[0])) {
+                        }
+                        //identity number
+                        else if (((string.split(" ").length == 2) ) && Pattern.matches(element.getValue().toString(), string.split(" ")[0])) {
                             if (values.get(element.getKey().toString()) == "Deciding...")
                             values.replace(element.getKey().toString(), string.split(" ")[0]);
                         }
@@ -214,6 +220,9 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
                 }
 
             }
+            //country of stay
+            if (values.get("Name") != "Deciding...")
+                values.replace("Country of Stay","Pakistan");
 
             name = values.get("Name");
             fatherName = values.get("Father Name");
