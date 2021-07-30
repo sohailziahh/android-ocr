@@ -18,6 +18,7 @@ public class BaseDocumentExtractor extends DocumentExtractor  {
 
 
 
+
     @Override
     public void setText(StringBuilder detectedText){
 

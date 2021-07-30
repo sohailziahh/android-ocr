@@ -29,8 +29,7 @@ import java.util.regex.Pattern;
 public class BaseCnicExtractor extends BaseDocumentExtractor {
 
 
-    public String csvName = "CNIC-DATA-" + new Timestamp(System.currentTimeMillis()) + ".csv";
-    private String csvDir = "CNIC_DATA/";
+
     Calendar year = Calendar.getInstance();
     int curYear = year.get(Calendar.YEAR);
 
@@ -52,7 +51,6 @@ public class BaseCnicExtractor extends BaseDocumentExtractor {
         this.mainActivity = activity;
 
         patterns.put("Gender","^M?$|^F?$");
-        //patterns.put("Country of Stay","^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$");
         patterns.put("Identity Number","^[0-9]{5}-[0-9]{7}-[0-9]$");
         patterns.put("Date of Birth","^\\s*(3[01]|[12][0-9]|0?[1-9])\\.(1[012]|0?[1-9])\\.((?:19|20)\\d{2})\\s*$");
         patterns.put("Date of Issue","^\\s*(3[01]|[12][0-9]|0?[1-9])\\.(1[012]|0?[1-9])\\.((?:19|20)\\d{2})\\s*$");
