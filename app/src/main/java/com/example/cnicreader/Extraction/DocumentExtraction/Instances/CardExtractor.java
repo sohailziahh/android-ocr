@@ -3,7 +3,10 @@ package com.example.cnicreader.Extraction.DocumentExtraction.Instances;
 import android.app.Activity;
 
 import com.example.cnicreader.Extraction.DocumentExtraction.Base.BaseDocumentExtractor;
+import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
+import com.google.android.gms.vision.text.Line;
+
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,11 +41,12 @@ public class CardExtractor extends BaseDocumentExtractor {
 
     @Override
     public void imageToText(List<TextBlock> textBlocks){
+
         for (int i = 0; i < textBlocks.size(); i++) {
             TextBlock textBlock = textBlocks.get(i);
             String s = textBlock.getValue();
             s = s.trim();
-
+            List<? extends Text> textLines = textBlock.getComponents();
             Iterator pIter = patterns.entrySet().iterator();
             String string = textBlock.getValue();
             while (pIter.hasNext()){

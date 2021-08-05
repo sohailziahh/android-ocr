@@ -1,4 +1,4 @@
-package com.example.cnicreader.MLModel.Instances;
+package com.example.cnicreader.MLModel.Base;
 
 import android.graphics.Bitmap;
 

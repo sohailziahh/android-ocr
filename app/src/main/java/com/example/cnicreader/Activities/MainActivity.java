@@ -3,13 +3,11 @@ package com.example.cnicreader.Activities;
 import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,10 +18,7 @@ import android.widget.TextView;
 import com.example.cnicreader.Extraction.DocumentExtraction.Base.BaseDocumentExtractor;
 import com.example.cnicreader.Extraction.DocumentExtraction.DocumentExtractor;
 import com.example.cnicreader.Extraction.DocumentExtraction.Instances.BaseCnicExtractor;
-import com.example.cnicreader.Extraction.DocumentExtraction.Instances.CardExtractor;
-import com.example.cnicreader.Representation.DocumentRepresentation.Instances.CardRepresentator;
-import com.example.cnicreader.views.ImageCanvas;
-import com.example.cnicreader.MLModel.Instances.BaseTextRecognizer;
+import com.example.cnicreader.MLModel.Base.BaseTextRecognizer;
 import com.example.cnicreader.MLModel.Instances.MLKitTextRecognizer;
 import com.example.cnicreader.R;
 import com.example.cnicreader.Representation.DocumentRepresentation.Base.BaseDocumentRepresentator;
@@ -31,6 +26,7 @@ import com.example.cnicreader.Representation.DocumentRepresentation.Instances.Ba
 import com.example.cnicreader.databinding.BasicExerciseViewBinding;
 
 import com.example.cnicreader.views.OverlayView;
+import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
@@ -84,8 +80,8 @@ public class MainActivity extends CameraActivity {
     TextView textView;
 
     BaseTextRecognizer textRecognizer;
-    BaseDocumentExtractor dCard;
-    BaseDocumentRepresentator setCardText;
+    BaseDocumentExtractor cnic;
+    BaseDocumentRepresentator setCnicText;
     DocumentExtractor extraction;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -96,12 +92,12 @@ public class MainActivity extends CameraActivity {
         setContentView(R.layout.activity_main);
 
         paint = new Paint();
-        //cnic = new BaseCnicExtractor(this);
-        dCard = new CardExtractor(this);
-        //setCnicText = new BaseCnicRepresentator(this);
-        setCardText = new CardRepresentator(this);
+        cnic = new BaseCnicExtractor(this);
+        //dCard = new CardExtractor(this);
+        setCnicText = new BaseCnicRepresentator(this);
+        //setCardText = new CardRepresentator(this);
         extraction = new BaseDocumentExtractor();
-        setCardText.initializeViews();
+        setCnicText.initializeViews();
 
 
 
@@ -110,7 +106,7 @@ public class MainActivity extends CameraActivity {
     }
 
 
-
+long start;
     public void document(Bitmap bitmap, TextRecognizer textRecognizer)
     {
         Canvas canvas = new Canvas(bitmap);
@@ -119,11 +115,14 @@ public class MainActivity extends CameraActivity {
         paint.setColor(Color.GREEN);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(5);
+
         List<TextBlock> textBlocks = extraction.process(bitmap, textRecognizer);
-            extract(dCard,textBlocks);
+            extract(cnic,textBlocks);
             StringBuilder detectedText = new StringBuilder();
             for (TextBlock textBlock : textBlocks) {
+
                 if (textBlock != null && textBlock.getValue() != null) {
+
                     lineFrame = textBlock.getBoundingBox();
                     canvas.drawRect(lineFrame,paint);
 
@@ -133,8 +132,9 @@ public class MainActivity extends CameraActivity {
                 }
 
             }
-            setText(setCardText,detectedText);
-            saveData(setCardText);
+            setText(setCnicText,detectedText);
+            saveData(setCnicText);
+
 
     }
 
@@ -144,7 +144,11 @@ public class MainActivity extends CameraActivity {
     public void processImage(Bitmap bitmap) {
         currentBitmap = bitmap;
         textRecognizer = new MLKitTextRecognizer(this);
+        start = System.nanoTime();
         textRecognizer.textRecognition(bitmap);
+        long end = System.nanoTime();
+        long elapsed = end - start;
+        Log.d("exec", Long.toString(elapsed));
 
     }
 
@@ -171,6 +175,7 @@ public class MainActivity extends CameraActivity {
     }
 
     public void extract(BaseDocumentExtractor docType, List<TextBlock> textBlocks){
+
         docType.alternateToText(textBlocks);
 
 

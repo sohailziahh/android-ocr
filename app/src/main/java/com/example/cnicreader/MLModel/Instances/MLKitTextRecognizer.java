@@ -4,17 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.util.SparseArray;
 
 import com.example.cnicreader.Activities.MainActivity;
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.text.TextBlock;
+import com.example.cnicreader.MLModel.Base.BaseTextRecognizer;
 import com.google.android.gms.vision.text.TextRecognizer;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MLKitTextRecognizer extends BaseTextRecognizer  {
+public class MLKitTextRecognizer extends BaseTextRecognizer {
 
 
 

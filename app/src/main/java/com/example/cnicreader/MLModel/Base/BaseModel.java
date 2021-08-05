@@ -15,8 +15,5 @@ public class BaseModel extends Model implements ModelInterface {
 
     }
 
-    @Override
-    public List<TextBlock> process(Bitmap bitmap, TextRecognizer textRecognizer) {
-        return null;
-    }
+
 }

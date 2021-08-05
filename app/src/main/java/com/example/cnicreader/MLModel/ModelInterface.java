@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface ModelInterface {
 
-    List<TextBlock> process(Bitmap bitmap, TextRecognizer textRecognizer);
+
 }
